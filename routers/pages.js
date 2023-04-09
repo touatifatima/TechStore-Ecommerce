@@ -176,7 +176,7 @@ route.get('/dashboard', function(req, res) {
     db.query('SELECT category, COUNT(*) AS category_count FROM products GROUP BY category', function(error, results, fields) {
       if (error) throw error;
       data.categories = results;
-         db.querry('')
+  
       
       // Define labels for the chart
       const labels = results.map(row => row.category);
