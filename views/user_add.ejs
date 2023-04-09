@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title><%= title %></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2><%= title %></h2>
+  <form action="/save" method="post">
+   
+    <div class="form-group">
+      <label for="name">Nom de projet</label>
+      <input type="text" class="form-control" id="name" placeholder="Entrer votre Nom" name="nom" required>
+    </div>
+    <div class="form-group">
+        <label for="start">Date od's</label>
+    <input type="date" id="name" name="date_ods" value="2023-02-22" min="2019-01-01" max="2050-12-31" required>
+    </div>
+    <div class="form-group">
+  <label for="start">Date d'ouverture</label>
+    <input type="date" id="name" name="date_ouvrtr" value="2023-02-22" min="2019-01-01" max="2050-12-31" required>
+    </div>
+    <div class="form-group"></div>
+    <label for="tentacles">delai </label>
+    <input type="number" id="name" name="delai"  min="1" max="100" required>
+        </div>
+        <div class="form-group">
+            <label for="start">Od's arret</label>
+              <input type="date" id="name" name="ods_arret" value="2023-02-22" min="2019-01-01" max="2050-12-31" required>
+              </div>
+    
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+  </form>
+</div>
+
+</body>
+</html>

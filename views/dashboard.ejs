@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Product Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+
+  </head>
+  <body>
+    <h1>Product Dashboard</h1>
+    <canvas id="chart"></canvas>
+    <script>
+      const labels = <%= JSON.stringify(labels) %>;
+      const data = <%= JSON.stringify(data) %>;
+      const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
+      const chartData = {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: colors.slice(0, data.length)
+        }]
+      };
+      const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false
+      };
+      const chart = new Chart(document.getElementById('chart'), {
+        type: 'pie',
+        data: chartData,
+        options: chartOptions
+      });
+    </script>
+  </body>
+</html>

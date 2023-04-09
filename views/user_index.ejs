@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Dashboard - Manage Products</title>
+  </head>
+  <body>
+    <h1>Admin Dashboard - Manage Products</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Category</th>
+          <th>Title</th>
+          <th>Details</th>
+          <th>Price</th>
+          <th>Picture</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% productList.forEach(function(product) { %>
+          <tr>
+            <td><%= product.pid %></td>
+            <td><%= product.category %></td>
+            <td><%= product.title %></td>
+            <td><%= product.details %></td>
+            <td><%= product.price %></td>
+            <td><img src="<%= product.picture %>"></td>
+            <td>
+              <form action="/admin/edit-product" method="POST">
+                <input type="hidden" name="pid" value="<%= product.pid %>">
+                <button type="submit">Edit</button>
+              </form>
+              <form action="/admin/delete-product" method="POST">
+                <input type="hidden" name="pid" value="<%= product.pid %>">
+                <button type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+        <tr>
+          <td colspan="7">
+            <form action="/admin/add-product" method="POST">
+              <button type="submit">Add Product</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

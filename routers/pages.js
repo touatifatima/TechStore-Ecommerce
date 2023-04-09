@@ -3,6 +3,8 @@ let session = require('express-session');
 let route = express.Router();
 let db = require('../database/config');
 
+
+
 route.get('/', function(req, res) {
   res.render('home', {title: 'Home'});
 });
@@ -147,6 +149,112 @@ route.post('/update-cart', function(req, res) {
   res.redirect('/cart');
 });
 
+
+route.post('/search', function(req, res) {
+  let query=req.body.query;
+  
+  db.query('SELECT * FROM products WHERE title LIKE "%'+query+'%"', function (err, result) {
+    if (err) {
+      throw err;
+    } else {
+      //console.log(result);
+      res.render('results', {title: 'results', results: result});
+    }
+  });
+});
+
+//dashboard
+// Route for dashboard view
+route.get('/dashboard', function(req, res) {
+  let data = {};
+  
+  // Query database for necessary data
+  db.query('SELECT COUNT(*) AS total_products FROM products', function(error, results, fields) {
+    if (error) throw error;
+    data.totalProducts = results[0].total_products;
+    
+    db.query('SELECT category, COUNT(*) AS category_count FROM products GROUP BY category', function(error, results, fields) {
+      if (error) throw error;
+      data.categories = results;
+         db.querry('')
+      
+      // Define labels for the chart
+      const labels = results.map(row => row.category);
+      
+      // Render dashboard view and pass in data and labels
+      res.render('dashboard', { data, labels });
+    });
+  });
+});
+
+
+
+// Import required modules
+
+// Route to display the admin dashboard for managing products
+route.get('/admin/products', function(req, res) {
+  connection.query('SELECT * FROM products', function(error, results, fields) {
+    if (error) throw error;
+    res.render('admin-products', { productList: results });
+  });
+});
+
+// Route to add a new product
+route.post('/admin/add-product', function(req, res) {
+  const newProduct = {
+    category: req.body.category,
+    title: req.body.title,
+    details: req.body.details,
+    price: req.body.price,
+    picture: req.body.picture
+  };
+  connection.query('INSERT INTO products SET ?', newProduct, function(error, results, fields) {
+    if (error) throw error;
+    res.redirect('/admin/products');
+  });
+});
+
+// Route to display the edit form for an existing product
+route.get('/admin/edit-product/:pid', function(req, res) {
+  const pid = req.params.pid;
+  connection.query('SELECT * FROM products WHERE pid = ?', pid, function(error, results, fields) {
+    if (error) throw error;
+    res.render('edit-product', { product: results[0] });
+  });
+});
+
+// Route to update an existing product
+route.post('/admin/update-product/:pid', function(req, res) {
+  const pid = req.params.pid;
+  const updatedProduct = {
+    category: req.body.category,
+    title: req.body.title,
+    details: req.body.details,
+    price: req.body.price,
+    picture: req.body.picture
+  };
+  connection.query('UPDATE products SET ? WHERE pid = ?', [updatedProduct, pid], function(error, results, fields) {
+    if (error) throw error;
+    res.redirect('/admin/products');
+  });
+});
+
+// Route to delete an existing product
+route.post('/admin/delete-product/:pid', function(req, res) {
+  const pid = req.params.pid;
+  connection.query('DELETE FROM products WHERE pid = ?', pid, function(error, results, fields) {
+    if (error) throw error;
+    res.redirect('/admin/products');
+  });
+});
+
+
+
+  
+    route.get('/login', function(req, res) {
+      res.render('login', { error: null });
+    });
+
 route.get('/checkout', function(req, res) {
   //res.send('<h1>About page</h1>');
   res.render('order', {title: 'Checkout'});
@@ -160,5 +268,30 @@ route.get('/about', function(req, res) {
 route.get('/contact', function(req, res) {
   res.render('page', {title: 'Contact'});
 });
+// render the search form
+route.get('/search', function(req, res) {
+  res.render('search', {title: 'search'});
+});
+route.get('/dashboard', function(req, res) {
+  res.render('dashboard', {title: 'dashboard'});
+});
+
+route.get("/", (req, res) => {
+  res.render("index")
+});
+route.get('/register', (req, res) => {
+  res.render("register")
+});
+
+route.get('/login', (req, res) => {
+  res.render("login")
+});
+route.get('/home', (req, res) => {
+  res.render("home")
+});
+route.get('/responsable', (req, res) => {
+  res.render("responsable")
+});
+
 
 module.exports = route;

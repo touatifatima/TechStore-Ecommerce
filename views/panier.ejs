@@ -1,0 +1,43 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+	<title>Shopping Cart</title>
+</head>
+<body>
+	<h1>Shopping Cart</h1>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Quantity</th>
+				<th>Price</th>
+				<th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% for (let i = 0; i < cartItems.length; i++) { %>
+				<tr>
+					<td><%= cartItems[i].title %></td>
+					<td><%= cartItems[i].quantity %></td>
+					<td>$<%= cartItems[i].price %></td>
+					<td>$<%= cartItems[i].quantity * cartItems[i].price %></td>
+				</tr>
+			<% } %>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="3">Total:</td>
+				<td>$<%= cartTotal %></td>
+			</tr>
+		</tfoot>
+	</table>
+
+	<form action="/place-order" method="POST">
+		<label for="shipping-address">Shipping Address:</label>
+		<input type="text" id="shipping-address" name="shippingAddress">
+
+		<button type="submit">Place Order</button>
+	</form>
+</body>
+</html> -->
