@@ -1,6 +1,7 @@
 /**
  * Create express object.
  */
+require('dotenv').config();
 var express = require('express');
 /**
  * Session object declear
@@ -21,7 +22,7 @@ var reload = require('reload');
 /**
  * For set port or default 7000 posr.
  */
-app.set('port', process.env.POST || 7000);
+app.set('port', process.env.PORT || 7000);
 /**
  * Set view engine & point a view folder.
  */
@@ -34,7 +35,7 @@ app.use(cookieParser());
 /**
  * Register session with secret key
  */
-app.use(session({secret: 'kak'}));
+app.use(session({secret: process.env.SESSION_SECRET || 'local-development-only', resave: false, saveUninitialized: false}));
 /**
  * Add & register body parser
  */
@@ -86,8 +87,8 @@ app.use(require('./routers/users'));
 /**
  * Create server.
  */
-var server = app.listen(7000, function() {
-  console.log('Running server');
+var server = app.listen(app.get('port'), function() {
+  console.log('TechStore running at http://localhost:' + app.get('port'));
 })
 /**
  * Auto reload server.

@@ -1,11 +1,12 @@
+require('dotenv').config();
 var mysql = require('mysql2');
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  port     : '3306',
-  user     : 'root',
-  password : 'zohor2002',
+  host     : process.env.DB_HOST || 'localhost',
+  port     : Number(process.env.DB_PORT || 3306),
+  user     : process.env.DB_USER || 'root',
+  password : process.env.DB_PASSWORD || '',
   //socket   : '/Applications/MAMP/tmp/mysql/mysql.sock',
-  database : 'jsp_eCommerce'
+  database : process.env.DB_NAME || 'jsp_eCommerce'
 });
 
 connection.connect(function(err) {
