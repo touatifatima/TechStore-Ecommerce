@@ -1,6 +1,6 @@
 # TechStore Ecommerce
 
-A server-rendered ecommerce demo built with **Node.js, Express, EJS, and MySQL**. TechStore provides a foundation for a computer hardware and IT equipment storefront, with product browsing, search, product details, and cookie-based cart management.
+A server-rendered ecommerce demo built with **jsp, EJS, and MySQL**. TechStore provides a foundation for a computer hardware and IT equipment storefront, with product browsing, search, product details, and cookie-based cart management.
 
 The current version is a development prototype. The included database contains sample clothing products, ready to be replaced with your own technology catalog.
 
