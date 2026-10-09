@@ -57,7 +57,7 @@ async function seed(existingConnection) {
     for (const [pid,category,title,details,price,image] of products) {
       await connection.query(
         'INSERT INTO products (pid, category, title, details, price, picture) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE category = VALUES(category), title = VALUES(title), details = VALUES(details), price = VALUES(price), picture = VALUES(picture)',
-        [pid, category, title, details, price, `/images/catalog/${image}.svg`]
+        [pid, category, title, details, price, '/images/catalog/product-photo-sheet.png']
       );
     }
     await connection.commit();

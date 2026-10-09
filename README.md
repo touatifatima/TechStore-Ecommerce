@@ -2,13 +2,15 @@
 
 TechStore is a responsive computer-hardware storefront built with Node.js, Express, EJS, and MySQL. Customers can browse a complete starter range of computers, components, peripherals, networking equipment, and office hardware, then submit delivery orders without online payment. An administrator can review orders, confirm requests, update delivery status, and manage the product catalog.
 
+![TechStore computer hardware storefront](Screenshots/storefront-desktop.png)
+
 ## Features
 
-- 24 sample computer and IT products across six hardware categories, with original locally hosted product illustrations.
+- 24 sample computer and IT products across six hardware categories, with original photorealistic product photography hosted locally in the project.
 - Search, product details, category filtering, sorting, and a quantity-editable shopping cart.
 - Cash-on-delivery order requests saved to MySQL with a unique reference and status tracking.
 - Password-protected administrator pages for confirming orders, updating order status, and adding, editing, or removing products.
-- Responsive storefront with an original TechStore hero photograph.
+- Responsive storefront with an original TechStore hero photograph and a full-page desktop screenshot below.
 
 ## Technology
 
