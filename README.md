@@ -115,7 +115,7 @@ npm run db:orders
 
 This command is safe to run again. Restart the app, add a product to the bag, and select **Review checkout**. When a customer submits their contact and delivery information, TechStore saves the request and its items and prices, then displays a unique order number. The customer pays in person when the order is delivered; the website collects no online payment.
 
-To manage customer requests, open **http://localhost:7000/dashboard** and select **Manage order requests**. Sign in using the username `admin` and the private password in `.env`. The order manager displays customer contact details, delivery address, requested products, total, and current status. You can update each request as it is confirmed, prepared, delivered, or cancelled.
+To manage orders and products, open **http://localhost:7000/dashboard**. Select **Manage order requests** or **Manage products** and sign in using the username `admin` and the private password in `.env`. The order manager displays customer contact details, delivery address, requested products, total, and current status. You can confirm a request with one click or update its status as it is prepared, handed over, or cancelled. The catalog manager lets you add, edit, and remove products; new products appear in the storefront immediately.
 
 ## Local pages
 
@@ -129,6 +129,8 @@ To manage customer requests, open **http://localhost:7000/dashboard** and select
 | `/checkout` | Submit a delivery order without online payment |
 | `/dashboard` | Product statistics |
 | `/admin/orders` | Password protected order management |
+| `/admin/products` | Add, edit, and remove storefront products |
+| `/admin/products` | Password protected product catalog management |
 
 ## Project structure
 
@@ -147,7 +149,7 @@ index.js           Application entry point
 
 ## Development status
 
-The storefront, search, product details, bag, informational pages, and dashboard share a responsive design. Category filtering, sorting, and bag updates are functional. Customers can place unpaid delivery orders and receive a saved order number. Store managers review requests and update fulfillment status in password protected order management. The included clothing catalog is unchanged.
+The storefront, search, product details, bag, informational pages, and dashboard share a responsive design. Category filtering, sorting, and bag updates are functional. Customers can place unpaid delivery orders and receive a saved order number. Store managers can confirm and update delivery requests, and add, edit, or remove products in the password protected manager.
 
 Account screens show the planned interface with sign-in and registration disabled: the supplied SQL does not include the `user` table, and the inherited controller still requires password handling and session improvements. Online payments are not supported; orders are paid by hand at delivery. Order management uses the private `ADMIN_PASSWORD` in `.env`.
 

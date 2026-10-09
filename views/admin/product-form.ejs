@@ -1,0 +1,17 @@
+<% include ../include/head.ejs %>
+<% include ../include/header.ejs %>
+<main class="container admin-product-form-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/dashboard">Overview</a><span>/</span><a href="/admin/products">Product catalog</a><span>/</span><span><%= product.pid ? 'Edit product' : 'Add product' %></span></nav>
+  <div class="page-intro"><span class="eyebrow">Store catalog</span><h1><%= product.pid ? 'Edit product.' : 'Add a product.' %></h1><p>These details appear in your storefront and customers' order summaries.</p></div>
+  <% if(formError){ %><p class="order-error" role="alert"><%= formError %></p><% } %>
+  <% if(!categories.length){ %><div class="notice">Add a category to your MySQL <code>categories</code> table before creating products.</div><% } %>
+  <form class="panel admin-edit-form" action="<%= product.pid ? '/admin/products/' + product.pid + '/edit' : '/admin/products' %>" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="field"><label for="product-title">Product name</label><input id="product-title" name="title" required maxlength="1000" value="<%= product.title %>" placeholder="For example: Wireless headphones"></div>
+    <div class="form-grid"><div class="field"><label for="product-category">Category</label><select id="product-category" name="category" required><% categories.forEach(function(category){ %><option value="<%= category.id %>" <%= Number(product.category)===Number(category.id) ? 'selected' : '' %>><%= category.name %></option><% }); %></select></div><div class="field"><label for="product-price">Price in DA</label><input id="product-price" name="price" type="number" min="1" max="2147483647" step="1" required value="<%= product.price %>" placeholder="3500"></div></div>
+    <div class="field"><label for="product-picture">Product image</label><input id="product-picture" name="picture" maxlength="1000" value="<%= product.picture %>" placeholder="12.jpg or an image URL"><small>Enter an image filename from the existing catalog or a direct image URL. Leave blank to use the TechStore placeholder.</small></div>
+    <div class="field"><label for="product-details">Description</label><textarea id="product-details" name="details" required minlength="2" rows="7" placeholder="Describe this product for your customers."><%= product.details %></textarea></div>
+    <div class="admin-form-actions"><a class="button outline" href="/admin/products">Cancel</a><button class="button" type="submit"><%= product.pid ? 'Save changes' : 'Add product to store' %></button></div>
+  </form>
+</main>
+<% include ../include/footer.ejs %>

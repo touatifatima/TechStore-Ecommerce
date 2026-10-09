@@ -55,6 +55,46 @@ function getOrderFormError(req, res, next, message, status = 400) {
   });
 }
 
+function verifyAdminCsrf(req, res, next) {
+  if (validCsrfToken(req.body._csrf, req.session.orderAdminToken)) return next();
+  return res.status(403).render('error', {title: 'Reload the admin page', message: 'Your admin session expired. Reload the page and try again.'});
+}
+
+function ensureAdminCsrf(req) {
+  if (!req.session.orderAdminToken) req.session.orderAdminToken = crypto.randomBytes(32).toString('hex');
+  return req.session.orderAdminToken;
+}
+
+function productValues(body) {
+  return {
+    category: Number.parseInt(body.category, 10),
+    title: String(body.title || '').trim(),
+    details: String(body.details || '').trim(),
+    price: Number(body.price),
+    picture: String(body.picture || '').trim()
+  };
+}
+
+function validateProduct(product) {
+  if (!Number.isSafeInteger(product.category) || product.category < 1) return 'Choose a product category.';
+  if (product.title.length < 2 || product.title.length > 1000) return 'Product name must be between 2 and 1,000 characters.';
+  if (product.details.length < 2) return 'Add a short product description.';
+  if (!Number.isSafeInteger(product.price) || product.price < 1 || product.price > 2147483647) return 'Enter a whole, positive price in DA.';
+  if (product.picture.length > 1000 || (product.picture && !/^[a-z0-9_.-]+\.(jpg|jpeg|png|webp)$/i.test(product.picture) && !/^https?:\/\//i.test(product.picture) && !/^\/(?!\/)[a-z0-9_./-]+$/i.test(product.picture))) return 'Use an image filename or a valid image URL.';
+  return null;
+}
+
+async function renderProductForm(req, res, product = null, error = null, status = 200) {
+  const categories = await query('SELECT id, name FROM categories ORDER BY name');
+  res.status(status).render('admin/product-form', {
+    title: product ? 'Edit product' : 'Add product',
+    product: product || {category: categories.length ? categories[0].id : '', title: '', details: '', price: '', picture: ''},
+    categories,
+    csrfToken: ensureAdminCsrf(req),
+    formError: error
+  });
+}
+
 
 
 route.get('/', function(req, res, next) {
@@ -247,61 +287,61 @@ route.get('/dashboard', function(req, res) {
 
 // Import required modules
 
-// Route to display the admin dashboard for managing products
-route.get('/admin/products', function(req, res) {
-  db.query('SELECT products.*, categories.name FROM products LEFT JOIN categories ON categories.id=products.category', function(error, results, fields) {
-    if (error) throw error;
-    res.render('admin/products', { title: 'Catalog', productList: results });
-  });
+route.get('/admin/products', requireOrderManager, async function(req, res, next) {
+  try {
+    const productList = await query('SELECT products.*, categories.name FROM products LEFT JOIN categories ON categories.id=products.category ORDER BY products.pid DESC');
+    res.render('admin/products', {title: 'Catalog', productList, saved: req.query.saved === '1', deleted: req.query.deleted === '1', csrfToken: ensureAdminCsrf(req)});
+  } catch (error) { next(error); }
 });
 
-// Route to add a new product
-route.post('/admin/add-product', function(req, res) {
-  const newProduct = {
-    category: req.body.category,
-    title: req.body.title,
-    details: req.body.details,
-    price: req.body.price,
-    picture: req.body.picture
-  };
-  connection.query('INSERT INTO products SET ?', newProduct, function(error, results, fields) {
-    if (error) throw error;
-    res.redirect('/admin/products');
-  });
+route.get('/admin/products/new', requireOrderManager, async function(req, res, next) {
+  try {
+    const categories = await query('SELECT COUNT(*) AS total_categories FROM categories');
+    if (!categories[0].total_categories) return res.status(400).render('error', {title: 'Add a category first', message: 'Create a product category in your database before adding products.'});
+    await renderProductForm(req, res);
+  } catch (error) { next(error); }
 });
 
-// Route to display the edit form for an existing product
-route.get('/admin/edit-product/:pid', function(req, res) {
-  const pid = req.params.pid;
-  connection.query('SELECT * FROM products WHERE pid = ?', pid, function(error, results, fields) {
-    if (error) throw error;
-    res.render('edit-product', { product: results[0] });
-  });
+route.post('/admin/products', requireOrderManager, verifyAdminCsrf, async function(req, res, next) {
+  const product = productValues(req.body);
+  const error = validateProduct(product);
+  if (error) return renderProductForm(req, res, product, error, 400).catch(next);
+  try {
+    const categories = await query('SELECT id FROM categories WHERE id = ?', [product.category]);
+    if (!categories.length) return await renderProductForm(req, res, product, 'That category is no longer available.', 400);
+    await query('INSERT INTO products (category, title, details, price, picture) VALUES (?, ?, ?, ?, ?)', [product.category, product.title, product.details, product.price, product.picture || '']);
+    res.redirect(303, '/admin/products?saved=1');
+  } catch (dbError) { next(dbError); }
 });
 
-// Route to update an existing product
-route.post('/admin/update-product/:pid', function(req, res) {
-  const pid = req.params.pid;
-  const updatedProduct = {
-    category: req.body.category,
-    title: req.body.title,
-    details: req.body.details,
-    price: req.body.price,
-    picture: req.body.picture
-  };
-  connection.query('UPDATE products SET ? WHERE pid = ?', [updatedProduct, pid], function(error, results, fields) {
-    if (error) throw error;
-    res.redirect('/admin/products');
-  });
+route.get('/admin/products/:pid/edit', requireOrderManager, async function(req, res, next) {
+  try {
+    const products = await query('SELECT pid, category, title, details, price, picture FROM products WHERE pid = ?', [req.params.pid]);
+    if (!products.length) return res.status(404).render('error', {title: 'Product not found', message: 'This product is no longer in your catalog.'});
+    await renderProductForm(req, res, products[0]);
+  } catch (error) { next(error); }
 });
 
-// Route to delete an existing product
-route.post('/admin/delete-product/:pid', function(req, res) {
-  const pid = req.params.pid;
-  connection.query('DELETE FROM products WHERE pid = ?', pid, function(error, results, fields) {
-    if (error) throw error;
-    res.redirect('/admin/products');
-  });
+route.post('/admin/products/:pid/edit', requireOrderManager, verifyAdminCsrf, async function(req, res, next) {
+  const product = productValues(req.body);
+  const error = validateProduct(product);
+  if (error) return renderProductForm(req, res, {...product, pid: req.params.pid}, error, 400).catch(next);
+  try {
+    const categories = await query('SELECT id FROM categories WHERE id = ?', [product.category]);
+    if (!categories.length) return await renderProductForm(req, res, {...product, pid: req.params.pid}, 'That category is no longer available.', 400);
+    const existing = await query('SELECT pid FROM products WHERE pid = ?', [req.params.pid]);
+    if (!existing.length) return res.status(404).render('error', {title: 'Product not found', message: 'This product is no longer in your catalog.'});
+    await query('UPDATE products SET category = ?, title = ?, details = ?, price = ?, picture = ? WHERE pid = ?', [product.category, product.title, product.details, product.price, product.picture || '', req.params.pid]);
+    res.redirect(303, '/admin/products?saved=1');
+  } catch (dbError) { next(dbError); }
+});
+
+route.post('/admin/products/:pid/delete', requireOrderManager, verifyAdminCsrf, async function(req, res, next) {
+  try {
+    const result = await query('DELETE FROM products WHERE pid = ?', [req.params.pid]);
+    if (!result.affectedRows) return res.status(404).render('error', {title: 'Product not found', message: 'This product is no longer in your catalog.'});
+    res.redirect(303, '/admin/products?deleted=1');
+  } catch (error) { next(error); }
 });
 
 
