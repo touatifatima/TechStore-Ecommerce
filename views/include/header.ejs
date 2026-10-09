@@ -1,44 +1,10 @@
-<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-  <!-- Brand/logo -->
-  <a class="navbar-brand" href="/"><i  aria-hidden="true"></i><img src="/Screenshots/logo.jpg"  class="logo"> microshop</a>
-  
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-    <span class="navbar-toggler-icon"></span>
-  </button>
- 
-  <div class="collapse navbar-collapse" id="collapsibleNavbar">
-    <!-- Links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/shop">Products</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/cart">Cart</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/about">About</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/contact">Contact</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/search">search</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/results">results</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/dashboard">statistiques</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/login">login</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/panier">panier</a>
-      </li>
-    </ul>
+<div class="announcement">A fresh perspective on everyday essentials. <a href="/shop">Explore the collection <span aria-hidden="true">&#8599;</span></a></div>
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" href="/" aria-label="TechStore home"><span class="brand-mark">t.</span>TechStore<span class="brand-dot">.</span></a>
+    <button class="menu-toggle icon-button" aria-label="Open navigation" aria-controls="primary-nav" aria-expanded="false">&#9776;</button>
+    <nav id="primary-nav" class="primary-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/shop">Shop all</a><a href="/about">Our story</a><a href="/contact">Support</a></nav>
+    <div class="header-actions"><a class="icon-button" href="/search" aria-label="Search products"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a><a class="icon-button account-link" href="/login" aria-label="Your account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></a><a class="bag-link" href="/cart"><svg viewBox="0 0 24 24"><path d="M5 7h14l1 14H4zM8 8V6a4 4 0 0 1 8 0v2"/></svg><span>Bag</span><span class="cart-count"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span></a></div>
   </div>
-</nav>
+</header>
+<main id="main">

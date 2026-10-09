@@ -1,48 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title><%= siteTitle+' | '+title %></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="https://via.placeholder.com/16/007bff/007bff" type="image/x-icon">
-</head>
-<body>
-  <% include include/header.ejs %>
-
-  <div class="jumbotron text-center">
-    <h1>My First Bootstrap Page</h1>
-    <p>Resize this responsive page to see the effect!</p> 
-  </div>
-    
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-4">
-        <h3>Column 1</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-      </div>
-      <div class="col-sm-4">
-        <h3>Column 2</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-      </div>
-      <div class="col-sm-4">
-        <h3>Column 3</h3>        
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-  <script src="js/main.js"></script>
-  <script src="reload/reload.js"></script>
-</body>
-</html>
+<% include include/head.ejs %>
+<% include include/header.ejs %>
+<div class="container">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy"><span class="eyebrow">Welcome to your next upgrade</span><h1 id="hero-title">Everyday essentials.<br><span>Extraordinary<br>possibilities.</span></h1><p>A fresh space for great finds. Explore our collection and make room for something you love.</p><a class="button light" href="/shop">Explore the collection <span aria-hidden="true">&#8599;</span></a><div class="hero-meta"><span>THOUGHTFUL DESIGN</span><span>EFFORTLESS DISCOVERY</span></div></div>
+    <div class="hero-art"><img src="/images/workspace.svg" alt="Illustration of a silver laptop with an abstract blue display"><div class="art-tag"><span aria-hidden="true">&#10022;</span><span><strong>A fresh point of view</strong>Designed for your everyday</span></div></div>
+  </section>
+  <div class="benefits"><div class="benefit"><span class="benefit-icon" aria-hidden="true">&#8981;</span><div><strong>Find your favorite</strong><p>Browse, search, and discover</p></div></div><div class="benefit"><span class="benefit-icon" aria-hidden="true">+</span><div><strong>Make it your own</strong><p>Build your bag as you explore</p></div></div><div class="benefit"><span class="benefit-icon" aria-hidden="true">&#8599;</span><div><strong>Keep things simple</strong><p>All the details in one place</p></div></div></div>
+  <section class="section"><div class="section-heading"><div><span class="eyebrow">The collection</span><h2>Discover your next favorite.</h2><p>A little inspiration for your everyday.</p></div><a class="text-link" href="/shop">Shop all <span aria-hidden="true">&#8599;</span></a></div><div class="product-grid"><% products.slice(0,4).forEach(function(product){ %><% include components/product/grid.ejs %><% }); %></div><% if(!products.length){ %><div class="empty-state"><h3>A new collection is on its way.</h3><p>Check back soon for our latest additions.</p></div><% } %></section>
+  <section class="editorial"><div><span class="eyebrow">A store with a fresh perspective</span><h2>Less searching.<br>More discovering.</h2><p>From the first look to your shopping bag, we keep the experience clear, simple, and focused on you.</p><a class="text-link" href="/about">Get to know TechStore <span aria-hidden="true">&#8599;</span></a></div><div><div class="editorial-stat"><b>01</b><div><strong>Explore at your own pace</strong><span>Find the right fit with search and category filters.</span></div></div><div class="editorial-stat"><b>02</b><div><strong>All the details, upfront</strong><span>Compare products and see your bag total as you go.</span></div></div></div></section>
+</div>
+<% include include/footer.ejs %>

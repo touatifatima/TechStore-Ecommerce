@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Search</title>
-</head>
-<body>
-  <h1>Search</h1>
-  <form action="/search" method="post">
-    <input type="text" name="query" placeholder="Search...">
-    <button type="submit">Search</button>
-  </form>
-</body>
-</html>
+<% include include/head.ejs %>
+<% include include/header.ejs %>
+<div class="container"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span>Search</span></nav><div class="page-intro"><span class="eyebrow">A little discovery</span><h1>What are you looking for?</h1><p>Search the collection by product name.</p></div><form class="search-form" action="/search" method="post" role="search"><label class="sr-only" for="product-search">Search products</label><input id="product-search" name="query" type="search" placeholder="Search the collection&hellip;" value="<%= typeof query !== 'undefined' ? query : '' %>" required maxlength="100"><button class="button" type="submit">Search &#8599;</button></form>
+<% if(typeof results !== 'undefined'){ %><div class="section-heading"><h2>Search results</h2><span class="muted"><%= results.length %> found</span></div><% if(results.length){ %><div class="product-grid"><% results.forEach(function(product){ %><% include components/product/grid.ejs %><% }); %></div><div class="catalog-bottom">Looking for something else? Try another search.</div><% } else { %><div class="empty-state"><h2>No matches just yet.</h2><p>Try a different product name or explore the full collection.</p><a class="button" href="/shop">Browse all products</a></div><% } %><% } else { %><div class="editorial"><div><h2>Open to inspiration?</h2><p>Your next favorite might be a little unexpected.</p><a class="text-link" href="/shop">Explore all products &#8599;</a></div><div class="editorial-stat"><b>&#8981;</b><div><strong>Keep it simple</strong><span>Try a product name, such as "shirt" or "jacket".</span></div></div></div><% } %></div>
+<% include include/footer.ejs %>

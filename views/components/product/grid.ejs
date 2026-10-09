@@ -1,22 +1,4 @@
-<div class="card rounded-0" style="margin-bottom: 20px;">
-  <div class="card-body">
-    <% if(title === 'Shop'){ %>
-      <a class="text-body" href="/product/<%= product.pid %>">
-        <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/<%= product.picture %>" />
-        <h4 class="card-title"><%= product.title %></h4>
-      </a>
-    <% } else {%>
-      <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/<%= product.picture %>" />
-      <h4 class="card-title"><%= product.title %></h4>
-    <% } %>
-    <span class="badge badge-warning"><%= product.name %></span>
-    <p class="card-text">Price: DA<%= product.price %></p>
-    <% if(title === 'Shop'){ %>
-      <p class="card-text"><%= product.details.substring(0, 100)+' ...' %></p>
-    <% } else {%>
-      <p class="card-text"><%= product.details %></p>
-    <% } %>
-    <a href="/add-to-cart/pid-<%= product.pid %>" class="card-link"><i class="fa fa-cart-plus" aria-hidden="true"></i> Add to cart</a>
-    
-  </div>
-</div>
+<article class="product-card" data-product data-name="<%= product.title %>" data-price="<%= product.price %>" data-category="<%= product.name || 'Collection' %>" data-index="<%= product.pid %>">
+  <a class="product-image" href="/product/<%= product.pid %>"><span class="product-badge"><%= product.name || 'Collection' %></span><img loading="lazy" src="<%= productImage(product.picture) %>" data-fallback="/images/product-placeholder.svg" alt="<%= product.title %>" width="400" height="440"></a>
+  <div class="product-body"><span class="product-category">TechStore collection</span><h3 class="product-title"><a href="/product/<%= product.pid %>"><%= product.title %></a></h3><div class="product-bottom"><span class="price"><%= money(product.price) %> <small>DA</small></span><a class="add-button" href="/add-to-cart/pid-<%= product.pid %>" aria-label="Add <%= product.title %> to bag">+</a></div></div>
+</article>

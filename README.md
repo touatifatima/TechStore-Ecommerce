@@ -4,13 +4,19 @@ A server-rendered ecommerce demo built with **Node.js, Express, EJS, and MySQL**
 
 The current version is a development prototype. The included database contains sample clothing products, ready to be replaced with your own technology catalog.
 
+![TechStore storefront](Screenshots/storefront-desktop.png)
+
+[View the mobile layout](Screenshots/storefront-mobile.png)
+
 ## Features
 
 - MySQL-backed product catalog and product details.
 - Product search by title.
 - Shopping cart with quantity updates, item removal, and clearing.
 - Product statistics dashboard.
-- Responsive layouts using Bootstrap 4.
+- Responsive storefront with a shared navy-and-blue design, custom CSS, and mobile navigation.
+- Client-side category filters and price/name sorting.
+- Clear bag totals, image fallbacks, and friendly empty and error states.
 - Authentication, administration, and checkout scaffolding for further development.
 
 ## Technology stack
@@ -18,7 +24,7 @@ The current version is a development prototype. The included database contains s
 | Layer | Technology |
 | --- | --- |
 | Runtime and server | Node.js, Express |
-| Templates and interface | EJS, Bootstrap 4, CSS, JavaScript |
+| Templates and interface | EJS, custom responsive CSS, vanilla JavaScript |
 | Database | MySQL, mysql2 |
 | Configuration and development | dotenv, nodemon |
 
@@ -118,7 +124,9 @@ index.js           Application entry point
 
 ## Development status
 
-Product browsing and cart flows form the core demo. Home and informational pages still include starter content. Authentication needs further work: the supplied SQL does not include the `user` table, and the controller requires password handling and session improvements. Administration routes require fixes to database references and template paths. Checkout is a prototype without a completed payment or order workflow.
+The storefront, search, product details, bag, informational pages, and dashboard share a responsive design. Category filtering, sorting, and bag updates are functional. The included clothing catalog is unchanged.
+
+Account screens show the planned interface with sign-in and registration disabled: the supplied SQL does not include the `user` table, and the inherited controller still requires password handling and session improvements. The catalog overview is read-only; legacy editing routes require further work. Checkout previews delivery details locally and does not save personal information, collect payments, or place orders.
 
 The inherited dependency tree has npm audit findings. Review dependency upgrades, query parameterization, authentication, and authorization before public deployment. This version is intended for local development and learning.
 
@@ -131,7 +139,7 @@ The inherited dependency tree has npm audit findings. Review dependency upgrades
 | Unknown database or missing catalog tables | Run `npm run db:setup` against an empty database. |
 | Setup reports existing tables | Use the initialized database, or choose a new empty `DB_NAME`. |
 | `EADDRINUSE` | Stop the process using the port or change `PORT` in `.env`. |
-| Missing styles while offline | Some interface assets load from external CDNs. |
+| Missing fonts or product photos while offline | Fonts and original product photos use external hosts; system fonts and a local image placeholder provide fallbacks. |
 
 ## Credits
 

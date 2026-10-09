@@ -5,8 +5,11 @@ let db = require('../database/config');
 
 
 
-route.get('/', function(req, res) {
-  res.render('home', {title: 'Home'});
+route.get('/', function(req, res, next) {
+  db.query('SELECT products.*, categories.name FROM products LEFT JOIN categories ON categories.id=products.category ORDER BY pid', function(err, products) {
+    if (err) return next(err);
+    res.render('home', {title: 'Home', products});
+  });
 });
 
 route.get('/shop', function(req, res) {
@@ -23,12 +26,13 @@ route.get('/shop', function(req, res) {
 
 route.get('/product/:product', function(req, res) {
   let products;
-  db.query("SELECT * FROM products left join categories on categories.id=products.category where pid='"+req.params.product+"'", function (err, result, fields) {
+  db.query('SELECT products.*, categories.name FROM products LEFT JOIN categories ON categories.id=products.category WHERE pid = ?', [req.params.product], function (err, result, fields) {
     if (err) {
       throw err;
     } else {
       //console.log(result);
-      res.render('product', {title: 'Product', products: result});
+      if (!result.length) return res.status(404).render('error', {title: 'Product not found', message: 'This item is no longer in the collection.'});
+      res.render('product', {title: result[0].title, products: result});
     }
   });
 });
@@ -88,7 +92,7 @@ route.get('/add-to-cart/:product', function(req, res) {
 });
 
 route.get('/remove-from-cart/:index', function(req, res) {
-  let products = req.cookies.node_express_ecommerce;
+  let products = res.locals.cartItems;
   let index = req.params.index.split("-")[1];
   products.splice(index, 1);
   res.cookie('node_express_ecommerce', products, {path:'/'});
@@ -139,9 +143,9 @@ route.get('/cart', function(req, res) {
 
 route.post('/update-cart', function(req, res) {
   //console.log(req.cookies.node_express_ecommerce);
-  let products = req.cookies.node_express_ecommerce;
+  let products = res.locals.cartItems;
   products.forEach(function(product, index) {
-    product.qnt = req.body.qnt[index];
+    product.qnt = Math.max(1, Math.min(99, parseInt((req.body.qnt || [])[index], 10) || 1));
   });
   //console.log(req.body)
   res.clearCookie('node_express_ecommerce', {path:'/'});
@@ -153,12 +157,12 @@ route.post('/update-cart', function(req, res) {
 route.post('/search', function(req, res) {
   let query=req.body.query;
   
-  db.query('SELECT * FROM products WHERE title LIKE "%'+query+'%"', function (err, result) {
+  db.query('SELECT products.*, categories.name FROM products LEFT JOIN categories ON categories.id=products.category WHERE title LIKE ?', ['%' + String(query || '').slice(0,100) + '%'], function (err, result) {
     if (err) {
       throw err;
     } else {
       //console.log(result);
-      res.render('results', {title: 'results', results: result});
+      res.render('results', {title: 'Search', results: result, query: String(query || '')});
     }
   });
 });
@@ -173,7 +177,7 @@ route.get('/dashboard', function(req, res) {
     if (error) throw error;
     data.totalProducts = results[0].total_products;
     
-    db.query('SELECT category, COUNT(*) AS category_count FROM products GROUP BY category', function(error, results, fields) {
+    db.query('SELECT products.category, categories.name, COUNT(*) AS category_count FROM products LEFT JOIN categories ON categories.id=products.category GROUP BY products.category, categories.name', function(error, results, fields) {
       if (error) throw error;
       data.categories = results;
   
@@ -182,7 +186,7 @@ route.get('/dashboard', function(req, res) {
       const labels = results.map(row => row.category);
       
       // Render dashboard view and pass in data and labels
-      res.render('dashboard', { data, labels });
+      res.render('dashboard', { title: 'Overview', data, labels });
     });
   });
 });
@@ -193,9 +197,9 @@ route.get('/dashboard', function(req, res) {
 
 // Route to display the admin dashboard for managing products
 route.get('/admin/products', function(req, res) {
-  connection.query('SELECT * FROM products', function(error, results, fields) {
+  db.query('SELECT products.*, categories.name FROM products LEFT JOIN categories ON categories.id=products.category', function(error, results, fields) {
     if (error) throw error;
-    res.render('admin-products', { productList: results });
+    res.render('admin/products', { title: 'Catalog', productList: results });
   });
 });
 
@@ -257,7 +261,7 @@ route.post('/admin/delete-product/:pid', function(req, res) {
 
 route.get('/checkout', function(req, res) {
   //res.send('<h1>About page</h1>');
-  res.render('order', {title: 'Checkout'});
+  res.render('order', {title: 'Checkout', products: res.locals.cartItems});
 });
 
 route.get('/about', function(req, res) {
@@ -287,10 +291,10 @@ route.get('/login', (req, res) => {
   res.render("login")
 });
 route.get('/home', (req, res) => {
-  res.render("home")
+  res.redirect('/')
 });
 route.get('/responsable', (req, res) => {
-  res.render("responsable")
+  res.redirect('/dashboard')
 });
 
 

@@ -1,48 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title><%= siteTitle+' | '+title %></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="https://via.placeholder.com/16/007bff/007bff" type="image/x-icon">
-</head>
-<body>
-  <% include include/header.ejs %>
-
-  <div class="jumbotron text-center">
-    <h1>My First Bootstrap Page</h1>
-    <p>Resize this responsive page to see the effect!</p> 
-  </div>
-    
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-4">
-        <h3>Column 1</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-      </div>
-      <div class="col-sm-4">
-        <h3>Column 2</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-      </div>
-      <div class="col-sm-4">
-        <h3>Column 3</h3>        
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-  <script src="js/main.js"></script>
-  <script src="reload/reload.js"></script>
-</body>
-</html>
+<% include include/head.ejs %>
+<% include include/header.ejs %>
+<div class="container"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span><%= title %></span></nav>
+<% if(title === 'Contact'){ %><div class="page-intro"><span class="eyebrow">A little guidance</span><h1>Here to make it simple.</h1><p>Everything you need to know about exploring TechStore.</p></div><section class="prose faq"><details open><summary>How do I find a product?</summary><p>Explore the <a class="text-link" href="/shop">collection</a>, filter by category, or use <a class="text-link" href="/search">search</a> to find a product by name. Open any product to see its details.</p></details><details><summary>How do I update my bag?</summary><p>Add products using the plus button or "Add to bag". In your bag, change quantities and select "Update bag". You can also remove individual items or empty the bag.</p></details><details><summary>Can I place an order?</summary><p>Online ordering and payments are not available yet. You can explore the catalog, build your bag, and preview the checkout experience.</p></details><details><summary>Do I need an account?</summary><p>No account is needed to browse or build your bag. Account registration and sign-in are coming soon.</p></details><details><summary>Which currency is used?</summary><p>Prices are shown in Algerian dinars (DA). Your bag shows an item subtotal; delivery costs are not currently calculated.</p></details></section><% } else { %><div class="page-intro"><span class="eyebrow">Our story</span><h1>A fresh perspective.<br>An everyday connection.</h1><p>Welcome to TechStore &mdash; a space designed to make discovering your next favorite feel effortless.</p></div><section class="editorial"><div><h2>Built around<br>the way you browse.</h2><p>Clear product details. A simple shopping bag. Room to explore. We believe a good shopping experience starts with the little things.</p><a class="button" href="/shop">Discover the collection &#8599;</a></div><img src="/images/workspace.svg" alt="A laptop illustration representing the TechStore experience"></section><% } %>
+</div>
+<% include include/footer.ejs %>
