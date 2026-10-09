@@ -108,7 +108,7 @@ app.use(function(err, req, res, next) {
 /**
  * Create server.
  */
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(app.get('port'), process.env.HOST || '127.0.0.1', function() {
   console.log('TechStore running at http://localhost:' + app.get('port'));
 })
 /**

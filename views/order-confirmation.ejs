@@ -1,0 +1,19 @@
+<% include include/head.ejs %>
+<% include include/header.ejs %>
+<main class="container confirmation-page" lang="fr">
+  <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="/">Accueil</a><span>/</span><span>Demande enregistrée</span></nav>
+  <section class="confirmation-card">
+    <div class="success-mark" aria-hidden="true">&#10003;</div>
+    <span class="eyebrow">Demande enregistrée</span>
+    <h1>Merci <%= order.customer_name %>,<br>votre demande est bien reçue.</h1>
+    <p class="confirmation-lead">Votre demande a été enregistrée avec succès. Le magasin vous contactera pour confirmer les produits et la livraison.</p>
+    <div class="order-reference"><span>Votre numéro de commande</span><strong><%= order.order_number %></strong><small>Gardez ce numéro pour retrouver votre demande.</small></div>
+    <div class="payment-banner"><span aria-hidden="true">&#9675;</span><div><strong>Aucun paiement en ligne.</strong><p>Le règlement se fera en main propre à la livraison, après confirmation du magasin.</p></div></div>
+  </section>
+  <div class="confirmation-grid">
+    <section class="panel"><h2>Récapitulatif de la demande</h2><% order.items.forEach(function(item){ %><div class="summary-line"><span><%= item.product_name %> <span class="muted">&times; <%= item.quantity %></span></span><span><%= money(Number(item.unit_price)*item.quantity) %> DA</span></div><% }); %><div class="summary-line total"><span>Total à régler à la livraison</span><span><%= money(order.subtotal) %> DA</span></div><p class="order-status"><span class="status-dot"></span>Statut : <%= {new:'en attente de confirmation',confirmed:'commande confirmée',preparing:'en préparation',ready:'prête à remettre',delivered:'remise au client',cancelled:'commande annulée'}[order.status] %></p></section>
+    <section class="panel"><h2>Livraison</h2><p><strong><%= order.customer_name %></strong><br><%= order.address %><br><%= order.postal_code %> <%= order.city %></p><p class="muted" style="margin-top:14px"><%= order.phone %><br><%= order.email %></p><p class="summary-note">La boutique vous contactera pour confirmer votre demande.</p></section>
+  </div>
+  <div class="confirmation-actions"><a class="button" href="/shop">Continuer mes achats &#8599;</a><a class="text-link" href="/contact">Besoin d'aide ?</a></div>
+</main>
+<% include include/footer.ejs %>

@@ -44,4 +44,8 @@
     status.textContent = form.dataset.previewForm;
     status.scrollIntoView({block:'nearest',behavior:'smooth'});
   }));
+  document.querySelectorAll('.order-form').forEach(form => form.addEventListener('submit', () => {
+    const button = form.querySelector('button[type="submit"]');
+    if (button) { button.disabled = true; button.textContent = 'Enregistrement de votre demande...'; }
+  }));
 })();

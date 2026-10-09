@@ -13,11 +13,12 @@ The current version is a development prototype. The included database contains s
 - MySQL-backed product catalog and product details.
 - Product search by title.
 - Shopping cart with quantity updates, item removal, and clearing.
+- Cash on delivery orders saved in MySQL with a unique reference and order status tracking.
 - Product statistics dashboard.
 - Responsive storefront with a shared navy-and-blue design, custom CSS, and mobile navigation.
 - Client-side category filters and price/name sorting.
 - Clear bag totals, image fallbacks, and friendly empty and error states.
-- Authentication, administration, and checkout scaffolding for further development.
+- Basic password protection for customer order management.
 
 ## Technology stack
 
@@ -62,12 +63,14 @@ Edit `.env` with your local settings:
 
 ```dotenv
 PORT=7000
+HOST=127.0.0.1
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=your-local-mysql-password
 DB_NAME=jsp_eCommerce
 SESSION_SECRET=replace-with-a-long-random-string
+ADMIN_PASSWORD=choose-a-long-private-password-for-order-management
 ```
 
 Use an empty password only if your MySQL account has no password. `.env` is ignored by Git. Keep your credentials local.
@@ -96,6 +99,24 @@ npm run dev
 
 Press `Ctrl+C` to stop. If you change `PORT`, use the new port in your browser.
 
+### 6. Enable orders paid on delivery
+
+The existing local setup has a private manager password in `.env`. To view it locally in PowerShell:
+
+```powershell
+Get-Content .env | Select-String '^ADMIN_PASSWORD='
+```
+
+Create the order tables without changing your existing products or database records:
+
+```bash
+npm run db:orders
+```
+
+This command is safe to run again. Restart the app, add a product to the bag, and select **Review checkout**. When a customer submits their contact and delivery information, TechStore saves the request and its items and prices, then displays a unique order number. The customer pays in person when the order is delivered; the website collects no online payment.
+
+To manage customer requests, open **http://localhost:7000/dashboard** and select **Manage order requests**. Sign in using the username `admin` and the private password in `.env`. The order manager displays customer contact details, delivery address, requested products, total, and current status. You can update each request as it is confirmed, prepared, delivered, or cancelled.
+
 ## Local pages
 
 | URL | Purpose |
@@ -105,7 +126,9 @@ Press `Ctrl+C` to stop. If you change `PORT`, use the new port in your browser.
 | `/product/1` | Example product |
 | `/search` | Product search |
 | `/cart` | Shopping cart |
+| `/checkout` | Submit a delivery order without online payment |
 | `/dashboard` | Product statistics |
+| `/admin/orders` | Password protected order management |
 
 ## Project structure
 
@@ -124,9 +147,9 @@ index.js           Application entry point
 
 ## Development status
 
-The storefront, search, product details, bag, informational pages, and dashboard share a responsive design. Category filtering, sorting, and bag updates are functional. The included clothing catalog is unchanged.
+The storefront, search, product details, bag, informational pages, and dashboard share a responsive design. Category filtering, sorting, and bag updates are functional. Customers can place unpaid delivery orders and receive a saved order number. Store managers review requests and update fulfillment status in password protected order management. The included clothing catalog is unchanged.
 
-Account screens show the planned interface with sign-in and registration disabled: the supplied SQL does not include the `user` table, and the inherited controller still requires password handling and session improvements. The catalog overview is read-only; legacy editing routes require further work. Checkout previews delivery details locally and does not save personal information, collect payments, or place orders.
+Account screens show the planned interface with sign-in and registration disabled: the supplied SQL does not include the `user` table, and the inherited controller still requires password handling and session improvements. Online payments are not supported; orders are paid by hand at delivery. Order management uses the private `ADMIN_PASSWORD` in `.env`.
 
 The inherited dependency tree has npm audit findings. Review dependency upgrades, query parameterization, authentication, and authorization before public deployment. This version is intended for local development and learning.
 
