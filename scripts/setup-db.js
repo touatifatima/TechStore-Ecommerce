@@ -18,7 +18,10 @@ async function main() {
     const [tables] = await connection.query('SHOW TABLES');
     if (tables.length) throw new Error('Database is not empty. No tables were changed. Use a new DB_NAME for sample data.');
     await connection.query(fs.readFileSync(path.join(__dirname, '../sql/ecommerce.sql'), 'utf8'));
-    console.log('Sample database imported successfully. Run npm start.');
+    // Convert the inherited sample catalog to the TechStore computer-hardware catalog.
+    const catalog = require('./seed-tech-catalog');
+    await catalog.seed(connection);
+    console.log('TechStore database and computer-hardware catalog created successfully.');
   } finally {
     await connection.end();
   }

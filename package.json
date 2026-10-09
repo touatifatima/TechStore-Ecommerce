@@ -7,7 +7,9 @@
     "start": "node index.js",
     "dev": "nodemon -e js,css,ejs,json index.js",
     "db:setup": "node scripts/setup-db.js",
-    "db:orders": "node scripts/setup-orders.js"
+    "db:orders": "node scripts/setup-orders.js",
+    "db:tech-catalog": "node scripts/seed-tech-catalog.js",
+    "art:catalog": "node scripts/generate-tech-art.js"
   },
   "author": "Touati",
   "license": "ISC",

@@ -1,41 +1,31 @@
 # TechStore Ecommerce
 
-A server-rendered ecommerce demo built with **jsp, EJS, and MySQL**. TechStore provides a foundation for a computer hardware and IT equipment storefront, with product browsing, search, product details, and cookie-based cart management.
-
-The current version is a development prototype. The included database contains sample clothing products, ready to be replaced with your own technology catalog.
-
-![TechStore storefront](Screenshots/storefront-desktop.png)
-
-[View the mobile layout](Screenshots/storefront-mobile.png)
+TechStore is a responsive computer-hardware storefront built with Node.js, Express, EJS, and MySQL. Customers can browse a complete starter range of computers, components, peripherals, networking equipment, and office hardware, then submit delivery orders without online payment. An administrator can review orders, confirm requests, update delivery status, and manage the product catalog.
 
 ## Features
 
-- MySQL-backed product catalog and product details.
-- Product search by title.
-- Shopping cart with quantity updates, item removal, and clearing.
-- Cash on delivery orders saved in MySQL with a unique reference and order status tracking.
-- Product statistics dashboard.
-- Responsive storefront with a shared navy-and-blue design, custom CSS, and mobile navigation.
-- Client-side category filters and price/name sorting.
-- Clear bag totals, image fallbacks, and friendly empty and error states.
-- Basic password protection for customer order management.
+- 24 sample computer and IT products across six hardware categories, with original locally hosted product illustrations.
+- Search, product details, category filtering, sorting, and a quantity-editable shopping cart.
+- Cash-on-delivery order requests saved to MySQL with a unique reference and status tracking.
+- Password-protected administrator pages for confirming orders, updating order status, and adding, editing, or removing products.
+- Responsive storefront with an original TechStore hero photograph.
 
-## Technology stack
+## Technology
 
-| Layer | Technology |
+| Area | Technology |
 | --- | --- |
 | Runtime and server | Node.js, Express |
-| Templates and interface | EJS, custom responsive CSS, vanilla JavaScript |
+| Views and interface | EJS, custom responsive CSS, vanilla JavaScript |
 | Database | MySQL, mysql2 |
-| Configuration and development | dotenv, nodemon |
+| Configuration | dotenv |
 
 ## Run locally
 
-### 1. Prerequisites
+### Prerequisites
 
-Install Node.js with npm, Git, and MySQL. Start your MySQL server before running the app. Local setup uses Node.js 22.14.0, npm 10.9.2, and MySQL 8.0.
+Install Node.js with npm, Git, and MySQL. Start the MySQL service before setting up the database.
 
-### 2. Clone and install
+### Clone and install
 
 ```bash
 git clone https://github.com/touatifatima/TechStore-Ecommerce.git
@@ -43,23 +33,17 @@ cd TechStore-Ecommerce
 npm install
 ```
 
-If the project is already in `C:\Users\lenovo\OneDrive\Desktop\techstore`, open a terminal there instead of cloning again.
+If you already have this project on your computer, open a terminal in the project folder and continue below.
 
-### 3. Configure the environment
+### Configure MySQL and the application
 
-Windows PowerShell:
+Copy the example environment file:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-macOS or Linux:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your local settings:
+On macOS or Linux, use `cp .env.example .env`. Edit `.env` and set your local MySQL credentials and a private administrator password:
 
 ```dotenv
 PORT=7000
@@ -70,101 +54,86 @@ DB_USER=root
 DB_PASSWORD=your-local-mysql-password
 DB_NAME=jsp_eCommerce
 SESSION_SECRET=replace-with-a-long-random-string
-ADMIN_PASSWORD=choose-a-long-private-password-for-order-management
+ADMIN_PASSWORD=choose-a-long-private-password
 ```
 
-Use an empty password only if your MySQL account has no password. `.env` is ignored by Git. Keep your credentials local.
+Use an empty `DB_PASSWORD` only if your MySQL account has no password. The `.env` file is ignored by Git; do not publish your credentials.
 
-### 4. Import sample data
+### Create the database and start TechStore
+
+For a **new, empty database**, run:
 
 ```bash
 npm run db:setup
-```
-
-The script creates the configured database and imports `sql/ecommerce.sql`, including the `categories`, `pages`, and `products` tables. Your MySQL account needs database and table creation permissions. It refuses to import into a database containing existing tables to preserve your data. Run this once for a fresh installation; skip it when restarting an initialized project.
-
-Alternatively, create an empty `jsp_eCommerce` database in MySQL Workbench or phpMyAdmin, select it, and import `sql/ecommerce.sql`.
-
-### 5. Start the app
-
-```bash
+npm run db:orders
+npm run art:catalog
 npm start
 ```
 
-Open **http://localhost:7000**. For automatic restarts during development:
+`db:setup` creates the configured database, imports the schema, and loads the TechStore hardware catalog. `db:orders` creates the tables used for cash-on-delivery order requests. `art:catalog` generates the local product illustrations. Open **http://localhost:7000** in your browser. Press `Ctrl+C` in the terminal to stop the server.
+
+If you already set up the database, do **not** rerun `db:setup`: it intentionally refuses to overwrite a database that contains tables. To update an existing installation with the hardware catalog and illustrations, run:
 
 ```bash
-npm run dev
-```
-
-Press `Ctrl+C` to stop. If you change `PORT`, use the new port in your browser.
-
-### 6. Enable orders paid on delivery
-
-The existing local setup has a private manager password in `.env`. To view it locally in PowerShell:
-
-```powershell
-Get-Content .env | Select-String '^ADMIN_PASSWORD='
-```
-
-Create the order tables without changing your existing products or database records:
-
-```bash
+npm run art:catalog
+npm run db:tech-catalog
 npm run db:orders
+npm start
 ```
 
-This command is safe to run again. Restart the app, add a product to the bag, and select **Review checkout**. When a customer submits their contact and delivery information, TechStore saves the request and its items and prices, then displays a unique order number. The customer pays in person when the order is delivered; the website collects no online payment.
+The catalog update preserves existing order records and their saved product and price details. Catalog images are served from `public/images/catalog/`.
 
-To manage orders and products, open **http://localhost:7000/dashboard**. Select **Manage order requests** or **Manage products** and sign in using the username `admin` and the private password in `.env`. The order manager displays customer contact details, delivery address, requested products, total, and current status. You can confirm a request with one click or update its status as it is prepared, handed over, or cancelled. The catalog manager lets you add, edit, and remove products; new products appear in the storefront immediately.
+### Development mode
 
-## Local pages
+Run `npm run dev` for automatic server restarts while editing. If you change `PORT` in `.env`, use that port in the browser instead.
+
+## Order and product management
+
+After setting `ADMIN_PASSWORD` in `.env` and creating the order tables, open **http://localhost:7000/dashboard**. Go to **Manage order requests** or **Manage products** and sign in with username `admin` and the private password from `.env`. The order manager displays order details and lets the administrator confirm requests or change their status. The product manager supports adding, editing, and removing catalog entries.
+
+Customers submit their contact and delivery information at checkout. TechStore saves the request, its items, and a unique order number; payment is made in person upon delivery. The website does not process online payments.
+
+## Main pages
 
 | URL | Purpose |
 | --- | --- |
-| `/` | Home page |
-| `/shop` | Product catalog |
-| `/product/1` | Example product |
+| `/` | Store homepage |
+| `/shop` | Hardware catalog |
+| `/product/1` | Product details |
 | `/search` | Product search |
 | `/cart` | Shopping cart |
-| `/checkout` | Submit a delivery order without online payment |
-| `/dashboard` | Product statistics |
-| `/admin/orders` | Password protected order management |
-| `/admin/products` | Add, edit, and remove storefront products |
-| `/admin/products` | Password protected product catalog management |
+| `/checkout` | Submit a delivery order |
+| `/dashboard` | Product dashboard |
+| `/admin/orders` | Order management |
+| `/admin/products` | Product catalog management |
+
+## Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| `ECONNREFUSED` | Start MySQL and verify `DB_HOST` and `DB_PORT` in `.env`. |
+| `ER_ACCESS_DENIED_ERROR` | Check the MySQL username, password, and permissions. |
+| Unknown database or missing tables | Run `npm run db:setup` only against a new, empty database. |
+| Setup reports existing tables | The setup script protects existing data; verify `DB_NAME` or use a new, empty database. |
+| `EADDRINUSE` | Stop the process using the configured port or change `PORT`. |
 
 ## Project structure
 
 ```text
-controllers/       Authentication controller
+controllers/       Authentication and request controllers
 database/          Shared MySQL connection
-public/            Static styles, scripts, and images
+public/            Styles, scripts, and product/hero images
 routers/           Express routes
-scripts/           Local database setup
-sql/               Sample schema and catalog
-views/             EJS pages and partials
-Screenshots/       Original project images
+scripts/           Database and catalog setup utilities
+sql/               Database schema and starter data
+views/             EJS pages and components
 .env.example       Environment configuration template
 index.js           Application entry point
 ```
 
-## Development status
+## Development note
 
-The storefront, search, product details, bag, informational pages, and dashboard share a responsive design. Category filtering, sorting, and bag updates are functional. Customers can place unpaid delivery orders and receive a saved order number. Store managers can confirm and update delivery requests, and add, edit, or remove products in the password protected manager.
-
-Account screens show the planned interface with sign-in and registration disabled: the supplied SQL does not include the `user` table, and the inherited controller still requires password handling and session improvements. Online payments are not supported; orders are paid by hand at delivery. Order management uses the private `ADMIN_PASSWORD` in `.env`.
-
-The inherited dependency tree has npm audit findings. Review dependency upgrades, query parameterization, authentication, and authorization before public deployment. This version is intended for local development and learning.
-
-## Troubleshooting
-
-| Symptom | Fix |
-| --- | --- |
-| `ECONNREFUSED` | Start MySQL; verify `DB_HOST` and `DB_PORT`. |
-| `ER_ACCESS_DENIED_ERROR` | Check the MySQL username, password, and permissions. |
-| Unknown database or missing catalog tables | Run `npm run db:setup` against an empty database. |
-| Setup reports existing tables | Use the initialized database, or choose a new empty `DB_NAME`. |
-| `EADDRINUSE` | Stop the process using the port or change `PORT` in `.env`. |
-| Missing fonts or product photos while offline | Fonts and original product photos use external hosts; system fonts and a local image placeholder provide fallbacks. |
+This project is intended for local development and learning. Review authentication, authorization, database queries, and dependency audit findings before exposing a deployment to the public internet. Account registration and online payments are not part of the current order-request workflow.
 
 ## Credits
 
